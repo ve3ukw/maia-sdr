@@ -107,10 +107,28 @@ module system_top (
   output          pll_clk,
   output          pll_mosi,
   input           pll_muxout,
-  input           i_clk
- 
-  
+  input           i_clk,
 
+  // EXT_IO connector JP5 (EXT_IO0 on bank 33 = 3.3 V, EXT_IO1..9 on bank 34 = 1.8 V)
+  inout           ext_io0,
+  inout           ext_io1_p,
+  inout           ext_io1_n,
+  inout           ext_io2_p,
+  inout           ext_io2_n,
+  inout           ext_io3_p,
+  inout           ext_io3_n,
+  inout           ext_io4_p,
+  inout           ext_io4_n,
+  inout           ext_io5_p,
+  inout           ext_io5_n,
+  inout           ext_io6_p,
+  inout           ext_io6_n,
+  inout           ext_io7_p,
+  inout           ext_io7_n,
+  inout           ext_io8_p,
+  inout           ext_io8_n,
+  inout           ext_io9_p,
+  inout           ext_io9_n
 );
 
   // internal signals
@@ -140,7 +158,7 @@ module system_top (
   wire          ref_det_enable;
   wire  [15:0]  ref_count;
 
-  assign gpio_i[63:55] = gpio_o[63:55];
+  assign gpio_i[63:60] = gpio_o[63:60];
   assign gpio_i[54:53] = ref_state;
   assign gpio_i[52]    = ref_locked;
   assign gpio_i[51:36] = ref_count;
@@ -150,15 +168,33 @@ module system_top (
   assign gpio_i[32:31] = gpio_o[32:31];
   
  
+  // EXT_IO connector JP5 (EMIO, Linux gpio 54 + n):
+  //   17 ext_io0 (pin 21), 18..30 ext_io1_p..ext_io7_p, 55..59 ext_io7_n..ext_io9_n
 ad_iobuf #(
-    .DATA_WIDTH(26)
+    .DATA_WIDTH(33)
   ) i_iobuf (
-    .dio_t ({gpio_t[26:22],gpio_t[13:0]}),
-    .dio_i ({gpio_o[26:22],gpio_o[13:0]}),
-    .dio_o ({gpio_i[26:22],gpio_i[13:0]}),
-    .dio_p ({ 
-              
-              
+    .dio_t ({gpio_t[59:55],gpio_t[30:17],gpio_t[13:0]}),
+    .dio_i ({gpio_o[59:55],gpio_o[30:17],gpio_o[13:0]}),
+    .dio_o ({gpio_i[59:55],gpio_i[30:17],gpio_i[13:0]}),
+    .dio_p ({ ext_io9_n,          // 59
+              ext_io9_p,          // 58
+              ext_io8_n,          // 57
+              ext_io8_p,          // 56
+              ext_io7_n,          // 55
+              ext_io7_p,          // 30
+              ext_io6_n,          // 29
+              ext_io6_p,          // 28
+              ext_io5_n,          // 27
+              ext_io5_p,          // 26
+              ext_io4_n,          // 25
+              ext_io4_p,          // 24
+              ext_io3_n,          // 23
+              ext_io3_p,          // 22
+              ext_io2_n,          // 21
+              ext_io2_p,          // 20
+              ext_io1_n,          // 19
+              ext_io1_p,          // 18
+              ext_io0,            // 17
               gpio_resetb,        // 13:13
               gpio_en_agc,        // 12:12
               gpio_ctl,           // 11: 8

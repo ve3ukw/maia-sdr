@@ -5,8 +5,8 @@
 #
 # Bank voltages (schematic sheet 3, ZYNQ_PWR_BANK):
 #   Bank 13 VCCO = VCC3V3  → LVCMOS33 (single-ended), LVDS_25 (differential, HR bank)
-#   Bank 33 VCCO = VCC1V8  → LVCMOS25
-#   Bank 34 VCCO = VCC1V8  → LVCMOS25
+#   Bank 33 VCCO = VCC3V3  → LVCMOS33
+#   Bank 34 VCCO = VCC1V8  → LVCMOS18
 #   Bank 35 VCCO = VCC1V8  → LVCMOS25
 #
 # PS-domain signals (MIO: QSPI, UART, SD, USB/OTG) are configured inside the
@@ -84,12 +84,12 @@ set_property  -dict {PACKAGE_PIN  U7    IOSTANDARD LVCMOS25} [get_ports {gpio_st
 set_property  -dict {PACKAGE_PIN  AB7   IOSTANDARD LVCMOS25} [get_ports {gpio_status[4]}]
 set_property  -dict {PACKAGE_PIN  U5    IOSTANDARD LVCMOS25} [get_ports {gpio_status[5]}]
 set_property  -dict {PACKAGE_PIN  R6    IOSTANDARD LVCMOS25} [get_ports {gpio_status[6]}]
-set_property  -dict {PACKAGE_PIN  P16   IOSTANDARD LVCMOS25} [get_ports {gpio_status[7]}]
+set_property  -dict {PACKAGE_PIN  P16   IOSTANDARD LVCMOS18} [get_ports {gpio_status[7]}]
 
-set_property -dict {PACKAGE_PIN R15 IOSTANDARD LVCMOS25} [get_ports gpio_sync]
+set_property -dict {PACKAGE_PIN R15 IOSTANDARD LVCMOS18} [get_ports gpio_sync]
 
-# EN_AGC  (Bank 34, LVCMOS25 — net routes to Bank 34 ball T18)
-set_property  -dict {PACKAGE_PIN  T18   IOSTANDARD LVCMOS25} [get_ports gpio_en_agc]
+# EN_AGC  (Bank 34, LVCMOS18 — net routes to Bank 34 ball T18)
+set_property  -dict {PACKAGE_PIN  T18   IOSTANDARD LVCMOS18} [get_ports gpio_en_agc]
 
 # RF_RESET  (Bank 13, LVCMOS33)
 set_property  -dict {PACKAGE_PIN  U11   IOSTANDARD LVCMOS25} [get_ports gpio_resetb]
@@ -97,8 +97,8 @@ set_property  -dict {PACKAGE_PIN  U11   IOSTANDARD LVCMOS25} [get_ports gpio_res
 # ENABLE  (Bank 13, LVCMOS33)
 set_property  -dict {PACKAGE_PIN  W8    IOSTANDARD LVCMOS25} [get_ports enable]
 
-# TXNRX  (Bank 34, LVCMOS25)
-set_property  -dict {PACKAGE_PIN  R16   IOSTANDARD LVCMOS25} [get_ports txnrx]
+# TXNRX  (Bank 34, LVCMOS18)
+set_property  -dict {PACKAGE_PIN  R16   IOSTANDARD LVCMOS18} [get_ports txnrx]
 
 # SPI bus — Bank 13 (LVCMOS33)
 # V10/U9/U10/U12 carry SPI on this board; pad_7/9/11 entries removed (conflicts).
@@ -148,28 +148,32 @@ set_property -dict {PACKAGE_PIN Y19  IOSTANDARD LVCMOS33} [get_ports i_clk]
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# EXT_IO connector JP5 — Banks 33/34 (VCCO = VCC1V8)
+# EXT_IO connector JP5 — Bank 33 (VCC3V3) / Bank 34 (VCC1V8)
+# EMIO GPIO, Linux gpio 54 + n: ext_io0 = 17, ext_io1_p..ext_io7_p = 18..30,
+# ext_io7_n..ext_io9_n = 55..59 (see system_top.v)
+# ext_io0 (PTT) and ext_io1_p (LNA enable) are pulled down so they stay off
+# until Linux takes them over.
 # ═══════════════════════════════════════════════════════════════════════════════
-set_property  -dict {PACKAGE_PIN  Y18   IOSTANDARD LVCMOS25} [get_ports ext_io0]
+set_property  -dict {PACKAGE_PIN  Y18   IOSTANDARD LVCMOS33  PULLTYPE PULLDOWN} [get_ports ext_io0]
 
-set_property  -dict {PACKAGE_PIN  K19   IOSTANDARD LVCMOS25} [get_ports {ext_io1_p}]
-set_property  -dict {PACKAGE_PIN  K20   IOSTANDARD LVCMOS25} [get_ports {ext_io1_n}]
-set_property  -dict {PACKAGE_PIN  L18   IOSTANDARD LVCMOS25} [get_ports {ext_io2_p}]
-set_property  -dict {PACKAGE_PIN  L19   IOSTANDARD LVCMOS25} [get_ports {ext_io2_n}]
-set_property  -dict {PACKAGE_PIN  M19   IOSTANDARD LVCMOS25} [get_ports {ext_io3_p}]
-set_property  -dict {PACKAGE_PIN  M20   IOSTANDARD LVCMOS25} [get_ports {ext_io3_n}]
-set_property  -dict {PACKAGE_PIN  N19   IOSTANDARD LVCMOS25} [get_ports {ext_io4_p}]
-set_property  -dict {PACKAGE_PIN  N20   IOSTANDARD LVCMOS25} [get_ports {ext_io4_n}]
-set_property  -dict {PACKAGE_PIN  M21   IOSTANDARD LVCMOS25} [get_ports {ext_io5_p}]
-set_property  -dict {PACKAGE_PIN  M22   IOSTANDARD LVCMOS25} [get_ports {ext_io5_n}]
-set_property  -dict {PACKAGE_PIN  N22   IOSTANDARD LVCMOS25} [get_ports {ext_io6_p}]
-set_property  -dict {PACKAGE_PIN  P22   IOSTANDARD LVCMOS25} [get_ports {ext_io6_n}]
-set_property  -dict {PACKAGE_PIN  R20   IOSTANDARD LVCMOS25} [get_ports {ext_io7_p}]
-set_property  -dict {PACKAGE_PIN  R21   IOSTANDARD LVCMOS25} [get_ports {ext_io7_n}]
-set_property  -dict {PACKAGE_PIN  P20   IOSTANDARD LVCMOS25} [get_ports {ext_io8_p}]
-set_property  -dict {PACKAGE_PIN  P21   IOSTANDARD LVCMOS25} [get_ports {ext_io8_n}]
-set_property  -dict {PACKAGE_PIN  N15   IOSTANDARD LVCMOS25} [get_ports {ext_io9_p}]
-set_property  -dict {PACKAGE_PIN  P15   IOSTANDARD LVCMOS25} [get_ports {ext_io9_n}]
+set_property  -dict {PACKAGE_PIN  K19   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io1_p}]
+set_property  -dict {PACKAGE_PIN  K20   IOSTANDARD LVCMOS18} [get_ports {ext_io1_n}]
+set_property  -dict {PACKAGE_PIN  L18   IOSTANDARD LVCMOS18} [get_ports {ext_io2_p}]
+set_property  -dict {PACKAGE_PIN  L19   IOSTANDARD LVCMOS18} [get_ports {ext_io2_n}]
+set_property  -dict {PACKAGE_PIN  M19   IOSTANDARD LVCMOS18} [get_ports {ext_io3_p}]
+set_property  -dict {PACKAGE_PIN  M20   IOSTANDARD LVCMOS18} [get_ports {ext_io3_n}]
+set_property  -dict {PACKAGE_PIN  N19   IOSTANDARD LVCMOS18} [get_ports {ext_io4_p}]
+set_property  -dict {PACKAGE_PIN  N20   IOSTANDARD LVCMOS18} [get_ports {ext_io4_n}]
+set_property  -dict {PACKAGE_PIN  M21   IOSTANDARD LVCMOS18} [get_ports {ext_io5_p}]
+set_property  -dict {PACKAGE_PIN  M22   IOSTANDARD LVCMOS18} [get_ports {ext_io5_n}]
+set_property  -dict {PACKAGE_PIN  N22   IOSTANDARD LVCMOS18} [get_ports {ext_io6_p}]
+set_property  -dict {PACKAGE_PIN  P22   IOSTANDARD LVCMOS18} [get_ports {ext_io6_n}]
+set_property  -dict {PACKAGE_PIN  R20   IOSTANDARD LVCMOS18} [get_ports {ext_io7_p}]
+set_property  -dict {PACKAGE_PIN  R21   IOSTANDARD LVCMOS18} [get_ports {ext_io7_n}]
+set_property  -dict {PACKAGE_PIN  P20   IOSTANDARD LVCMOS18} [get_ports {ext_io8_p}]
+set_property  -dict {PACKAGE_PIN  P21   IOSTANDARD LVCMOS18} [get_ports {ext_io8_n}]
+set_property  -dict {PACKAGE_PIN  N15   IOSTANDARD LVCMOS18} [get_ports {ext_io9_p}]
+set_property  -dict {PACKAGE_PIN  P15   IOSTANDARD LVCMOS18} [get_ports {ext_io9_n}]
 
 set_property  -dict {PACKAGE_PIN  H17  IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_scl]
 set_property  -dict {PACKAGE_PIN  F16  IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_sda]
