@@ -151,29 +151,31 @@ set_property -dict {PACKAGE_PIN Y19  IOSTANDARD LVCMOS33} [get_ports i_clk]
 # EXT_IO connector JP5 — Bank 33 (VCC3V3) / Bank 34 (VCC1V8)
 # EMIO GPIO, Linux gpio 54 + n: ext_io0 = 17, ext_io1_p..ext_io7_p = 18..30,
 # ext_io7_n..ext_io9_n = 55..59 (see system_top.v)
-# ext_io0 (PTT) and ext_io1_p (LNA enable) are pulled down so they stay off
-# until Linux takes them over.
+# ext_io0 (pin 21, 3.3 V) has no pull: with a jumper to pin 23 it drives the
+# 40 MHz clock select (CLK_SEL, pulled up by R137 = onboard VCTCXO), which
+# must keep its default through boot. The 1.8 V lines are pulled down so
+# outputs stay off until Linux drives them and unused inputs read 0.
 # ═══════════════════════════════════════════════════════════════════════════════
-set_property  -dict {PACKAGE_PIN  Y18   IOSTANDARD LVCMOS33  PULLTYPE PULLDOWN} [get_ports ext_io0]
+set_property  -dict {PACKAGE_PIN  Y18   IOSTANDARD LVCMOS33}  [get_ports ext_io0]
 
 set_property  -dict {PACKAGE_PIN  K19   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io1_p}]
-set_property  -dict {PACKAGE_PIN  K20   IOSTANDARD LVCMOS18} [get_ports {ext_io1_n}]
-set_property  -dict {PACKAGE_PIN  L18   IOSTANDARD LVCMOS18} [get_ports {ext_io2_p}]
-set_property  -dict {PACKAGE_PIN  L19   IOSTANDARD LVCMOS18} [get_ports {ext_io2_n}]
-set_property  -dict {PACKAGE_PIN  M19   IOSTANDARD LVCMOS18} [get_ports {ext_io3_p}]
-set_property  -dict {PACKAGE_PIN  M20   IOSTANDARD LVCMOS18} [get_ports {ext_io3_n}]
-set_property  -dict {PACKAGE_PIN  N19   IOSTANDARD LVCMOS18} [get_ports {ext_io4_p}]
-set_property  -dict {PACKAGE_PIN  N20   IOSTANDARD LVCMOS18} [get_ports {ext_io4_n}]
-set_property  -dict {PACKAGE_PIN  M21   IOSTANDARD LVCMOS18} [get_ports {ext_io5_p}]
-set_property  -dict {PACKAGE_PIN  M22   IOSTANDARD LVCMOS18} [get_ports {ext_io5_n}]
-set_property  -dict {PACKAGE_PIN  N22   IOSTANDARD LVCMOS18} [get_ports {ext_io6_p}]
-set_property  -dict {PACKAGE_PIN  P22   IOSTANDARD LVCMOS18} [get_ports {ext_io6_n}]
-set_property  -dict {PACKAGE_PIN  R20   IOSTANDARD LVCMOS18} [get_ports {ext_io7_p}]
-set_property  -dict {PACKAGE_PIN  R21   IOSTANDARD LVCMOS18} [get_ports {ext_io7_n}]
-set_property  -dict {PACKAGE_PIN  P20   IOSTANDARD LVCMOS18} [get_ports {ext_io8_p}]
-set_property  -dict {PACKAGE_PIN  P21   IOSTANDARD LVCMOS18} [get_ports {ext_io8_n}]
-set_property  -dict {PACKAGE_PIN  N15   IOSTANDARD LVCMOS18} [get_ports {ext_io9_p}]
-set_property  -dict {PACKAGE_PIN  P15   IOSTANDARD LVCMOS18} [get_ports {ext_io9_n}]
+set_property  -dict {PACKAGE_PIN  K20   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io1_n}]
+set_property  -dict {PACKAGE_PIN  L18   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io2_p}]
+set_property  -dict {PACKAGE_PIN  L19   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io2_n}]
+set_property  -dict {PACKAGE_PIN  M19   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io3_p}]
+set_property  -dict {PACKAGE_PIN  M20   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io3_n}]
+set_property  -dict {PACKAGE_PIN  N19   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io4_p}]
+set_property  -dict {PACKAGE_PIN  N20   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io4_n}]
+set_property  -dict {PACKAGE_PIN  M21   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io5_p}]
+set_property  -dict {PACKAGE_PIN  M22   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io5_n}]
+set_property  -dict {PACKAGE_PIN  N22   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io6_p}]
+set_property  -dict {PACKAGE_PIN  P22   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io6_n}]
+set_property  -dict {PACKAGE_PIN  R20   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io7_p}]
+set_property  -dict {PACKAGE_PIN  R21   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io7_n}]
+set_property  -dict {PACKAGE_PIN  P20   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io8_p}]
+set_property  -dict {PACKAGE_PIN  P21   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io8_n}]
+set_property  -dict {PACKAGE_PIN  N15   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io9_p}]
+set_property  -dict {PACKAGE_PIN  P15   IOSTANDARD LVCMOS18  PULLTYPE PULLDOWN} [get_ports {ext_io9_n}]
 
 set_property  -dict {PACKAGE_PIN  H17  IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_scl]
 set_property  -dict {PACKAGE_PIN  F16  IOSTANDARD LVCMOS25 PULLTYPE PULLUP} [get_ports iic_sda]
